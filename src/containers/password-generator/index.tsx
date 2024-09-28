@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react';
-import { Box, Button, Input, Text, VStack, useToast, Flex } from '@chakra-ui/react';
+import { Box, Button, Input, Text, VStack, useToast, Flex, Slider, SliderTrack, SliderFilledTrack, SliderThumb } from '@chakra-ui/react';
 
 import { generatePassword } from '@/utils/generate-password';
 
@@ -9,11 +9,11 @@ const PasswordGenerator = () => {
   const toast = useToast();
 
   const [dictionary, setDictionary] = useState<string[]>([]);
-
   const [password, setPassword] = useState('');
+  const [passwordLength, setPasswordLength] = useState(8);
 
   const onGenerate = () => {
-    const newPassword = generatePassword(dictionary, 10);
+    const newPassword = generatePassword(dictionary, passwordLength);
     setPassword(newPassword);
   };
 
@@ -45,47 +45,62 @@ const PasswordGenerator = () => {
   };
 
   return (
-    <Flex 
-      height="100vh" 
-      alignItems="center" 
+    <Flex
+      height="100vh"
+      alignItems="center"
       justifyContent="center"
     >
-      <Box 
-        p={{ base: 3, md: 5 }} 
-        shadow="md" 
-        borderWidth="1px" 
+      <Box
+        p={{ base: 3, md: 5 }}
+        shadow="md"
+        borderWidth="1px"
         borderRadius="md"
         width={{ base: '90%', md: '70%', lg: '50%' }}
       >
-        <VStack 
+        <VStack
           spacing={{ base: 3, md: 4 }}
         >
-          <Text 
+          <Text
             fontSize={{ base: "xl", md: "2xl" }}
           >
             Password Generator
           </Text>
-          <Input 
-            value={password} 
-            isReadOnly 
-            placeholder="Generated password will appear here" 
+          <Input
+            value={password}
+            isReadOnly
+            placeholder="Generated password will appear here"
             size={{ base: "sm", md: "md", lg: "lg" }}
           />
-          <Button 
-            onClick={onGenerate} 
+          <Button
+            onClick={onGenerate}
             colorScheme="teal"
             size={{ base: "sm", md: "md", lg: "lg" }}
           >
             Generate Password
           </Button>
-          <Button 
-            onClick={copyToClipboard} 
-            colorScheme="blue" 
+          <Button
+            onClick={copyToClipboard}
+            colorScheme="blue"
             isDisabled={!password}
             size={{ base: "sm", md: "md", lg: "lg" }}
           >
             Copy to Clipboard
           </Button>
+
+          <Text>Length: {passwordLength}</Text>
+          <Slider
+            value={passwordLength}
+            onChange={(val) => setPasswordLength(val)}
+            min={1}
+            max={16}
+            step={1}
+            size={{ base: "sm", md: "md", lg: "lg" }}
+          >
+            <SliderTrack>
+              <SliderFilledTrack />
+            </SliderTrack>
+            <SliderThumb />
+          </Slider>
         </VStack>
       </Box>
     </Flex>
