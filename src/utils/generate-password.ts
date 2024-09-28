@@ -8,5 +8,5 @@ export function generatePassword(words: string[] = [], length: number = 0): stri
     password += words[randomIndex];
   }
 
-  return password;
+  return password.trim();
 }

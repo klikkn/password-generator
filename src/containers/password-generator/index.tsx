@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react';
-import { Box, Button, Input, Text, VStack, useToast, Flex, Slider, SliderTrack, SliderFilledTrack, SliderThumb } from '@chakra-ui/react';
+import { Box, Button, Input, Text, VStack, useToast, Flex, Slider, SliderTrack, SliderFilledTrack, SliderThumb, InputGroup, InputRightElement } from '@chakra-ui/react';
+import { CheckIcon } from '@chakra-ui/icons';
 
 import { generatePassword } from '@/utils/generate-password';
 
@@ -11,11 +12,37 @@ const PasswordGenerator = () => {
   const [dictionary, setDictionary] = useState<string[]>([]);
   const [password, setPassword] = useState('');
   const [passwordLength, setPasswordLength] = useState(8);
+  const [repeatPassword, setRepeatPassword] = useState('');
+  const [isMatch, setIsMatch] = useState(false);
 
   const onGenerate = () => {
+    setRepeatPassword('');
+    setIsMatch(false);
+
     const newPassword = generatePassword(dictionary, passwordLength);
     setPassword(newPassword);
   };
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(password).then(() => {
+      toast({
+        title: "Copied to clipboard",
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+        position: "top",
+      });
+    });
+  };
+
+  const handleRepeatPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setRepeatPassword(value);
+    setIsMatch(value === password);
+  };
+
+  console.log(password, repeatPassword, isMatch);
+  
 
   useEffect(() => {
     import('@/assets/qwerty-left-hand-db.json')
@@ -31,18 +58,6 @@ const PasswordGenerator = () => {
         console.error('Error loading JSON file', error);
       });
   }, []);
-
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(password).then(() => {
-      toast({
-        title: "Copied to clipboard",
-        status: "success",
-        duration: 2000,
-        isClosable: true,
-        position: "top",
-      });
-    });
-  };
 
   return (
     <Flex
@@ -63,7 +78,7 @@ const PasswordGenerator = () => {
           <Text
             fontSize={{ base: "xl", md: "2xl" }}
           >
-            Password Generator
+            Offline Left Hand Password Generator
           </Text>
           <Input
             value={password}
@@ -71,6 +86,18 @@ const PasswordGenerator = () => {
             placeholder="Generated password will appear here"
             size={{ base: "sm", md: "md", lg: "lg" }}
           />
+          <InputGroup size={{ base: "sm", md: "md", lg: "lg" }}>
+            <Input
+              value={repeatPassword}
+              onChange={handleRepeatPasswordChange}
+              placeholder="Check how easy to enter this password"
+            />
+            {isMatch && (
+              <InputRightElement>
+                <CheckIcon color="green.500" />
+              </InputRightElement>
+            )}
+          </InputGroup>
           <Button
             onClick={onGenerate}
             colorScheme="teal"
