@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react';
-import { Box, Button, Input, Text, VStack, useToast, Flex, Slider, SliderTrack, SliderFilledTrack, SliderThumb, InputGroup, InputRightElement } from '@chakra-ui/react';
-import { CheckIcon } from '@chakra-ui/icons';
+import { Box, Button, Input, Text, VStack, useToast, Flex, Slider, SliderTrack, SliderFilledTrack, SliderThumb, InputGroup, InputRightElement, HStack, useBreakpointValue } from '@chakra-ui/react';
+import { CheckIcon, RepeatIcon } from '@chakra-ui/icons';
 
 import { generatePassword } from '@/utils/generate-password';
 
@@ -41,9 +41,6 @@ const PasswordGenerator = () => {
     setIsMatch(value === password);
   };
 
-  console.log(password, repeatPassword, isMatch);
-  
-
   useEffect(() => {
     import('@/assets/qwerty-left-hand-db.json')
       .then((module) => module.default)
@@ -80,12 +77,21 @@ const PasswordGenerator = () => {
           >
             Offline Left Hand Password Generator
           </Text>
-          <Input
-            value={password}
-            isReadOnly
-            placeholder="Generated password will appear here"
-            size={{ base: "sm", md: "md", lg: "lg" }}
-          />
+          <HStack width="100%">
+            <Input
+              value={password}
+              isReadOnly
+              placeholder="Generated password will appear here"
+              size={{ base: "sm", md: "md", lg: "lg" }}
+            />
+            <Button
+              onClick={onGenerate}
+              colorScheme="teal"
+              size={{ base: "sm", md: "md", lg: "lg" }}
+            >
+              <RepeatIcon />
+            </Button>
+          </HStack>
           <InputGroup size={{ base: "sm", md: "md", lg: "lg" }}>
             <Input
               value={repeatPassword}
@@ -98,13 +104,6 @@ const PasswordGenerator = () => {
               </InputRightElement>
             )}
           </InputGroup>
-          <Button
-            onClick={onGenerate}
-            colorScheme="teal"
-            size={{ base: "sm", md: "md", lg: "lg" }}
-          >
-            Generate Password
-          </Button>
           <Button
             onClick={copyToClipboard}
             colorScheme="blue"
