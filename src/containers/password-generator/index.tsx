@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Box, Button, Input, Text, VStack, useToast, Flex } from '@chakra-ui/react';
 
-import { generatePassword } from '@/utils/generate-password.hook';
+import { generatePassword } from '@/utils/generate-password';
 
 const PasswordGenerator = () => {
   const [password, setPassword] = useState('');

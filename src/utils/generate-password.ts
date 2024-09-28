@@ -1,3 +1,6 @@
+import { QUERTY_REGULAR, QUERTY_SHIFT } from "@/const/keyboard-layout";
+import { generateRandomPath } from "@app/utils/generate-matrix-path";
+
 export function generatePassword(length: number): string {
   const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+~`|}{[]:;?><,./-=";
   let password = "";
@@ -7,3 +10,4 @@ export function generatePassword(length: number): string {
   }
   return password;
 }
+
