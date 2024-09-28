@@ -1,18 +1,36 @@
 'use client'
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Box, Button, Input, Text, VStack, useToast, Flex } from '@chakra-ui/react';
 
 import { generatePassword } from '@/utils/generate-password';
 
 const PasswordGenerator = () => {
-  const [password, setPassword] = useState('');
   const toast = useToast();
 
+  const [dictionary, setDictionary] = useState<string[]>([]);
+
+  const [password, setPassword] = useState('');
+
   const onGenerate = () => {
-    const newPassword = generatePassword(12);
+    const newPassword = generatePassword(dictionary, 10);
     setPassword(newPassword);
   };
+
+  useEffect(() => {
+    import('@/assets/qwerty-left-hand-db.json')
+      .then((module) => module.default)
+      .then((data: any) => {
+        try {
+          setDictionary(data);
+        } catch (error) {
+          console.error('Error parsing JSON data', error);
+        }
+      })
+      .catch((error) => {
+        console.error('Error loading JSON file', error);
+      });
+  }, []);
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(password).then(() => {
