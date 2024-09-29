@@ -11,8 +11,6 @@ const PasswordGenerator = () => {
   const toast = useToast();
 
   const [words, setWords] = useState<string[]>([]);
-  const [digits, setDigits] = useState<string[]>([]);
-  const [symbols, setSymbols] = useState<string[]>([]);
   const [replacements, setReplacements] = useState<{ [key: string]: string }>({});
 
   const [useSymbols, setUseSymbols] = useState(false);
@@ -64,11 +62,9 @@ const PasswordGenerator = () => {
   useEffect(() => {
     import('@/assets/pc-qwerty-left-hand.json')
       .then((module) => module.default)
-      .then(({ words, digits, symbols, replacements }: any) => {
+      .then(({ words, replacements }: { words: string[], replacements: { [key: string]: string } }) => {
         try {
           setWords(words);
-          setDigits(digits);
-          setSymbols(symbols);
           setReplacements(replacements);
         } catch (error) {
           console.error('Error parsing JSON data', error);
