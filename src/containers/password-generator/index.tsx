@@ -22,16 +22,18 @@ const PasswordGenerator = () => {
   const [repeatPassword, setRepeatPassword] = useState('');
   const [isMatch, setIsMatch] = useState(false);
 
-  const onGenerate = () => {
-    setRepeatPassword('');
-    setIsMatch(false);
-
+  const generateNewPassword = () => {
     let newPassword = generatePassword(words, passwordLength);
     if (useSymbols) {
       newPassword = replaceLettersWithSymbols(newPassword, replacements);
     }
-    
     setPassword(newPassword);
+  };
+
+  const onGenerate = () => {
+    setRepeatPassword('');
+    setIsMatch(false);
+    generateNewPassword();
   };
 
   const copyToClipboard = (value: string) => {
@@ -76,6 +78,12 @@ const PasswordGenerator = () => {
         console.error('Error loading JSON file', error);
       });
   }, []);
+
+  useEffect(() => {
+    if (words.length > 0) {
+      generateNewPassword();
+    }
+  }, [words, passwordLength, useSymbols, replacements]);
 
   return (
     <Flex
@@ -123,7 +131,7 @@ const PasswordGenerator = () => {
               <Input
                 value={repeatPassword}
                 onChange={handleRepeatPasswordChange}
-                placeholder="Check how easy to enter this password"
+                placeholder="You can check how easy to use this password..."
                 size={{ base: "lg" }}
                 fontSize={getFontSize(repeatPassword.length)}
               />
