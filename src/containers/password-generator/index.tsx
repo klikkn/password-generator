@@ -52,6 +52,13 @@ const PasswordGenerator = () => {
     setIsMatch(value === password);
   };
 
+  const getFontSize = (length: number) => {
+    if (length <= 10) return 'lg';
+    if (length <= 20) return 'md';
+    if (length <= 20) return 'sm';
+    return 'xs';
+  };
+
   useEffect(() => {
     import('@/assets/pc-qwerty-left-hand.json')
       .then((module) => module.default)
@@ -75,6 +82,7 @@ const PasswordGenerator = () => {
       height="100vh"
       alignItems="center"
       justifyContent="center"
+      p={{ base: 2, md: 4 }}
     >
       <Box
         p={{ base: 3, md: 5 }}
@@ -98,6 +106,7 @@ const PasswordGenerator = () => {
               isReadOnly
               placeholder="Generated password will appear here"
               size={{ base: "lg" }}
+              fontSize={getFontSize(password.length)}
             />
             <Button
               onClick={() => copyToClipboard(password)}
@@ -116,6 +125,7 @@ const PasswordGenerator = () => {
                 onChange={handleRepeatPasswordChange}
                 placeholder="Check how easy to enter this password"
                 size={{ base: "lg" }}
+                fontSize={getFontSize(repeatPassword.length)}
               />
               {isMatch && (
                 <InputRightElement>
