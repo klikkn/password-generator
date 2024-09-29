@@ -1,17 +1,24 @@
 'use client'
 
 import { useEffect, useState } from 'react';
-import { Box, Button, Input, Text, VStack, useToast, Flex, Slider, SliderTrack, SliderFilledTrack, SliderThumb, InputGroup, InputRightElement, HStack, useBreakpointValue } from '@chakra-ui/react';
+import { Box, Button, Input, Text, VStack, useToast, Flex, Slider, SliderTrack, SliderFilledTrack, SliderThumb, InputGroup, InputRightElement, HStack, Switch } from '@chakra-ui/react';
 import { CheckIcon, RepeatIcon, CopyIcon } from '@chakra-ui/icons';
 
 import { generatePassword } from '@/utils/generate-password';
+import { replaceLettersWithSymbols } from '@/utils/letters-to-symbols';
 
 const PasswordGenerator = () => {
   const toast = useToast();
 
-  const [dictionary, setDictionary] = useState<string[]>([]);
+  const [words, setWords] = useState<string[]>([]);
+  const [digits, setDigits] = useState<string[]>([]);
+  const [symbols, setSymbols] = useState<string[]>([]);
+  const [replacements, setReplacements] = useState<{ [key: string]: string }>({});
+
+  const [useSymbols, setUseSymbols] = useState(false);
+
   const [password, setPassword] = useState('');
-  const [passwordLength, setPasswordLength] = useState(8);
+  const [passwordLength, setPasswordLength] = useState(2);
   const [repeatPassword, setRepeatPassword] = useState('');
   const [isMatch, setIsMatch] = useState(false);
 
@@ -19,7 +26,11 @@ const PasswordGenerator = () => {
     setRepeatPassword('');
     setIsMatch(false);
 
-    const newPassword = generatePassword(dictionary, passwordLength);
+    let newPassword = generatePassword(words, passwordLength);
+    if (useSymbols) {
+      newPassword = replaceLettersWithSymbols(newPassword, replacements);
+    }
+    
     setPassword(newPassword);
   };
 
@@ -42,11 +53,14 @@ const PasswordGenerator = () => {
   };
 
   useEffect(() => {
-    import('@/assets/qwerty-left-hand-db.json')
+    import('@/assets/pc-qwerty-left-hand.json')
       .then((module) => module.default)
-      .then((data: any) => {
+      .then(({ words, digits, symbols, replacements }: any) => {
         try {
-          setDictionary(data);
+          setWords(words);
+          setDigits(digits);
+          setSymbols(symbols);
+          setReplacements(replacements);
         } catch (error) {
           console.error('Error parsing JSON data', error);
         }
@@ -123,12 +137,22 @@ const PasswordGenerator = () => {
             </HStack>
           </Button>
 
+          <HStack width="100%" justifyContent="space-between">
+            <Text>Use Symbols</Text>
+            <Switch
+              isChecked={useSymbols}
+              onChange={() => setUseSymbols(!useSymbols)}
+              colorScheme="teal"
+              size="lg"
+            />
+          </HStack>
+
           <Text>Length: {passwordLength}</Text>
           <Slider
             value={passwordLength}
             onChange={(val) => setPasswordLength(val)}
             min={1}
-            max={16}
+            max={6}
             step={1}
             size={{ base: "sm", md: "md", lg: "lg" }}
           >

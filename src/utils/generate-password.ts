@@ -1,12 +1,11 @@
-export function generatePassword(words: string[] = [], length: number = 0): string {
+export function generatePassword(words: string[], wordLimit: number): string {
   const wordsLength = words.length;
+  const selectedWords: string[] = [];
 
-  let password = '';
-  while (password.length < length) {
+  for (let i = 0; i < wordLimit; i++) {
     const randomIndex = Math.floor(Math.random() * wordsLength);
-    password += ' ';
-    password += words[randomIndex];
+    selectedWords.push(words[randomIndex]);
   }
 
-  return password.trim();
+  return selectedWords.join('-');
 }
