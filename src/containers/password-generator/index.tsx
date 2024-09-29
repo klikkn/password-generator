@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Box, Button, Input, Text, VStack, useToast, Flex, Slider, SliderTrack, SliderFilledTrack, SliderThumb, InputGroup, InputRightElement, HStack, useBreakpointValue } from '@chakra-ui/react';
-import { CheckIcon, RepeatIcon } from '@chakra-ui/icons';
+import { CheckIcon, RepeatIcon, CopyIcon } from '@chakra-ui/icons';
 
 import { generatePassword } from '@/utils/generate-password';
 
@@ -23,8 +23,8 @@ const PasswordGenerator = () => {
     setPassword(newPassword);
   };
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(password).then(() => {
+  const copyToClipboard = (value: string) => {
+    navigator.clipboard.writeText(value).then(() => {
       toast({
         title: "Copied to clipboard",
         status: "success",
@@ -77,40 +77,50 @@ const PasswordGenerator = () => {
           >
             Offline Left Hand Password Generator
           </Text>
+
           <HStack width="100%">
             <Input
               value={password}
               isReadOnly
               placeholder="Generated password will appear here"
-              size={{ base: "sm", md: "md", lg: "lg" }}
+              size={{ base: "lg" }}
             />
             <Button
-              onClick={onGenerate}
-              colorScheme="teal"
-              size={{ base: "sm", md: "md", lg: "lg" }}
+              onClick={() => copyToClipboard(password)}
+              colorScheme="blue"
+              isDisabled={!password}
+              size={{ base: "lg" }}
             >
-              <RepeatIcon />
+              <CopyIcon />
             </Button>
           </HStack>
-          <InputGroup size={{ base: "sm", md: "md", lg: "lg" }}>
-            <Input
-              value={repeatPassword}
-              onChange={handleRepeatPasswordChange}
-              placeholder="Check how easy to enter this password"
-            />
-            {isMatch && (
-              <InputRightElement>
-                <CheckIcon color="green.500" />
-              </InputRightElement>
-            )}
+
+          <InputGroup size={{ base: "lg" }}>
+            <HStack width="100%">
+              <Input
+                value={repeatPassword}
+                onChange={handleRepeatPasswordChange}
+                placeholder="Check how easy to enter this password"
+                size={{ base: "lg" }}
+              />
+              {isMatch && (
+                <InputRightElement>
+                  <CheckIcon color="green.500" />
+                </InputRightElement>
+              )}
+            </HStack>
           </InputGroup>
+
           <Button
-            onClick={copyToClipboard}
-            colorScheme="blue"
-            isDisabled={!password}
-            size={{ base: "sm", md: "md", lg: "lg" }}
+            width={{ base: "100%" }}
+            onClick={onGenerate}
+            colorScheme="teal"
+            size={{ base: "lg" }}
           >
-            Copy to Clipboard
+            <HStack>
+              <RepeatIcon />
+              <span>Generate</span>
+            </HStack>
           </Button>
 
           <Text>Length: {passwordLength}</Text>
