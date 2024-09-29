@@ -7,5 +7,5 @@ export function generatePassword(words: string[], wordLimit: number): string {
     selectedWords.push(words[randomIndex]);
   }
 
-  return selectedWords.join('-');
+  return selectedWords.join('');
 }
